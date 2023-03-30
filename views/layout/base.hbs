@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring</title>
+    <link rel="stylesheet" href="/style/base.css">
+    {{#if styles}}
+        {{#each styles}}
+            <link rel="stylesheet" href="{{this}}">
+        {{/each}}
+    {{/if}}
+</head>
+
+<body>
+    <main>
+        {{{body}}}
+    </main>
+</body>
+<script src="/js/util/httpRequest.js"></script>
+{{#if js}}
+    {{#each js}}
+        <script src="{{this}}"></script>
+    {{/each}}
+{{/if}}
+</html>

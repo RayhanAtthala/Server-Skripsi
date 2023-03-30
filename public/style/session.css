@@ -1,0 +1,11 @@
+h1{
+    background: var(--yellow-color);
+    width: 200px;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    border: 2px var(--dark-color) solid;
+}
