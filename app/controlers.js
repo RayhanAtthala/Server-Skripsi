@@ -17,12 +17,14 @@ exports.register = (req, res) => {
 exports.main = (req, res) => {
   const data = {
     styles: ["/style/main.css"],
+    js: ["/js/main.js"],
   };
   res.render("main", data);
 };
 exports.device = (req, res) => {
   const data = {
     styles: ["/style/device.css"],
+    js: ["/js/device.js"],
   };
   res.render("device", data);
 };

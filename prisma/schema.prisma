@@ -57,10 +57,10 @@ model Device {
 
 model Session {
   id            String    @id @default(cuid())
-  streamLDR     String
-  streamDist    String
-  streamPosture String
-  streamRest    String
+  streamLDR     String?
+  streamDist    String?
+  streamPosture String?
+  streamRest    String?
   active        Boolean
   device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId      String
