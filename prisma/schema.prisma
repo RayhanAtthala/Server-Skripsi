@@ -65,16 +65,20 @@ model Session {
   device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId      String
   History       History[]
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
 }
 
 model History {
-  id        String  @id @default(cuid())
+  id        String    @id @default(cuid())
   ldr       String
   distance  String
   posture   String
   rest      String
-  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  session   Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 enum TOKEN_TYPE {

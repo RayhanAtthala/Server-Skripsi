@@ -1,6 +1,9 @@
 const pause = document.getElementById("pause");
 const sessionButton = document.getElementById("pause");
 const timeCounter = document.getElementById("time");
+const deviceIdContainer = document.getElementById("device-id");
+const deviceId = deviceIdContainer.getAttribute("data-id");
+const cahayaContainer = document.getElementById("cahaya");
 let state = "not started";
 let interval;
 
@@ -56,4 +59,14 @@ pause.addEventListener("click", async (e) => {
             window.location = "/summary";
         }
     }
+});
+
+const socket = io();
+socket.on("connect", (s) => {
+    // console.log(socket.id);
+});
+
+socket.on(`onbroadcast/${deviceId}`, (data) => {
+    cahayaContainer.textContent = data.cahaya;
+    console.log(data);
 });

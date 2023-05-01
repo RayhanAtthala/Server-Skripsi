@@ -7,6 +7,10 @@ const hbs = require("hbs");
 const app = express();
 const PORT = process.env.PORT || 8080;
 const ROUTER = require("./router");
+const SOCKET_SERVICE = require("./connections/socket");
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
+app.io = io;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -19,6 +23,8 @@ app.set("view options", { layout: "layout/base" });
 app.use(express.static("public"));
 app.use("/", ROUTER);
 
-app.listen(PORT, () => {
-  console.log(`🚀 SERVER RUNNING IN PORT ${PORT}`);
+SOCKET_SERVICE.socketConnections(io);
+
+http.listen(PORT, () => {
+    console.log(`🚀 SERVER RUNNING IN PORT ${PORT}`);
 });

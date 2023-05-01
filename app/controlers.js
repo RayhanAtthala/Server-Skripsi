@@ -1,47 +1,58 @@
-const { setCookie } = require("../services/auth");
+const prisma = require("../prisma/client");
+const { setCookie, getUser } = require("../services/auth");
 // Put your controller code here
 exports.login = (req, res) => {
-  const data = {
-    styles: ["/style/login.css"],
-    js: ["/js/login.js"],
-  };
-  res.render("login", data);
+    const data = {
+        styles: ["/style/login.css"],
+        js: ["/js/login.js"],
+    };
+    res.render("login", data);
 };
+
 exports.register = (req, res) => {
-  const data = {
-    styles: ["/style/login.css"],
-    js: ["/js/register.js"],
-  };
-  res.render("register", data);
+    const data = {
+        styles: ["/style/login.css"],
+        js: ["/js/register.js"],
+    };
+    res.render("register", data);
 };
-exports.main = (req, res) => {
-  const data = {
-    styles: ["/style/main.css"],
-    js: ["/js/main.js"],
-  };
-  res.render("main", data);
+
+exports.main = async (req, res) => {
+    const userId = await getUser(req);
+    const device = await prisma.device.findUnique({
+        where: {
+            userId,
+        },
+    });
+    const data = {
+        styles: ["/style/main.css"],
+        js: ["/js/main.js"],
+        device: device.shortid,
+    };
+    res.render("main", data);
 };
+
 exports.device = (req, res) => {
-  const data = {
-    styles: ["/style/device.css"],
-    js: ["/js/device.js"],
-  };
-  res.render("device", data);
+    const data = {
+        styles: ["/style/device.css"],
+        js: ["/js/device.js"],
+    };
+    res.render("device", data);
 };
 exports.session = (req, res) => {
-  const data = {
-    styles: ["/style/session.css"],
-  };
-  res.render("session", data);
+    const data = {
+        styles: ["/style/session.css"],
+    };
+    res.render("session", data);
 };
 exports.summary = (req, res) => {
-  const data = {
-    styles: ["/style/summary.css"],
-  };
-  res.render("summary", data);
+    const data = {
+        styles: ["/style/summary.css"],
+    };
+    res.render("summary", data);
 };
 
 exports.logout = (req, res) => {
-  setCookie({ res, title: "Authorization", data: "", maxAge: 1 });
-  res.redirect("/login");
+    setCookie({ res, title: "Authorization", data: "", maxAge: 1 });
+    res.redirect("/login");
 };
