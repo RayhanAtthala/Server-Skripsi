@@ -39,6 +39,14 @@ main {
     width: 480px;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
 @media only screen and (max-width: 576px) {
     main {
         width: 100% !important;
