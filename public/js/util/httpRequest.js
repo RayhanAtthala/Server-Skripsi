@@ -22,3 +22,16 @@ async function httpRequest({ url, body = null, method = "POST" }) {
   const data = await response.json();
   return data;
 }
+
+async function generalDataLoader({ url, func }) {
+  const data = await httpRequest({ url, method: "GET" });
+
+  if (data.success) {
+    func(data.data);
+  }
+
+  if (!data.success) {
+    console.log(data);
+    alert("Data not found!");
+  }
+}
