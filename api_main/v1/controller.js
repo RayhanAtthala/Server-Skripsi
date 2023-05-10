@@ -8,7 +8,7 @@ exports.startsesh = async (req, res) => {
         const device = await prisma.device.findUnique({
             where: { userId: await getUser(req) },
         });
-        console.log("device", device);
+
         const status = await prisma.session.create({
             data: {
                 active: true,
@@ -28,27 +28,46 @@ exports.startsesh = async (req, res) => {
 
 exports.stopsesh = async (req, res) => {
     try {
-        const session = await prisma.session.findMany({
-            orderBy: {
-                id: "desc",
+        const userId = await getUser(req);
+        const device = await prisma.device.findUnique({
+            where: {
+                userId: userId,
             },
-            take: 1,
         });
-        console.log("session", session);
+
+        const session = await prisma.session.findFirst({
+            where: {
+                device: {
+                    shortid: device.shortid,
+                },
+                active: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+
         const status = await prisma.session.update({
             where: {
-                id: session[0].id,
+                id: session.id,
             },
             data: {
                 active: false,
+                stopTime: new Date(),
             },
         });
-        return resSuccess({ res, data: { status } });
+
+        return resSuccess({
+            res,
+            data: { status },
+            title: "Berhasil mengakhiri sesi penggunaan",
+        });
     } catch (error) {
         console.log(error);
         return resError({ res, title: "Stop Session Gagal", errors: error });
     }
 };
+
 exports.streamdata = async (req, res) => {
     try {
         const { cahaya, jarak, flex, rest, deviceId } = req.body;
@@ -151,7 +170,8 @@ exports.streamdata = async (req, res) => {
 
         return resSuccess({
             res,
-            title: "Sukses Menerima data, data tidak disimpan ke database",
+            title:
+                text || "Sukses Menerima data, data tidak disimpan ke database",
         });
     } catch (error) {
         console.log(error);
@@ -159,14 +179,16 @@ exports.streamdata = async (req, res) => {
     }
 };
 
-module.exports.summaryTime = async (req, res) => {
+exports.summaryTime = async (req, res) => {
     try {
         const userId = await getUser(req);
+
         const lastSession = await prisma.session.findFirst({
             where: {
                 device: {
-                    userId: userId,
+                    userId,
                 },
+                active: false,
             },
             orderBy: {
                 createdAt: "desc",

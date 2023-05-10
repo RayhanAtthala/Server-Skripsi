@@ -65,6 +65,7 @@ model Session {
   device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId      String
   History       History[]
+  stopTime      DateTime?
   createdAt     DateTime? @default(now())
   updatedAt     DateTime? @updatedAt
 }
