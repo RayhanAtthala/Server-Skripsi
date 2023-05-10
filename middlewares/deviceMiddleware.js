@@ -66,7 +66,7 @@ const cekSession = async (req, res, next) => {
                 active: true,
             },
             orderBy: {
-                createdAt: "asc",
+                createdAt: "desc",
             },
             take: 1,
             select: {
