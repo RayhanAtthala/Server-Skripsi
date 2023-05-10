@@ -204,3 +204,30 @@ exports.summaryTime = async (req, res) => {
         console.log(error.message);
     }
 };
+
+exports.activeSession = async (req, res) => {
+    try {
+        const userId = await getUser(req);
+        const session = await prisma.session.findFirst({
+            where: {
+                device: {
+                    userId,
+                },
+                active: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+
+        if (!session) throw "No active session found";
+
+        return resSuccess({
+            res,
+            title: "Success get session detail",
+            data: session,
+        });
+    } catch (error) {
+        return resError({ res, title: "Failed to get session", errors: error });
+    }
+};
