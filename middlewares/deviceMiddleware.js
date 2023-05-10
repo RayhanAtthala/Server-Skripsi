@@ -54,18 +54,32 @@ const cekStatus = async (req, res, next) => {
         return resError({ res, title: error });
     }
 };
+
 const cekSession = async (req, res, next) => {
     try {
-        const device = await prisma.session.findMany({
-            orderBy: {
-                id: "desc",
-            },
-            take: 1,
+        const { deviceId } = req.body;
+        const device = await prisma.session.findFirst({
             where: {
+                device: {
+                    shortid: deviceId,
+                },
                 active: true,
             },
+            orderBy: {
+                createdAt: "asc",
+            },
+            take: 1,
+            select: {
+                id: true,
+                active: true,
+                device: {
+                    select: {
+                        shortid: true,
+                    },
+                },
+            },
         });
-        if (device.length == 0) throw "Session tidak ditemukan !";
+        if (!device) throw "Session tidak ditemukan !";
         return next();
     } catch (error) {
         return resError({ res, title: error });
