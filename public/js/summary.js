@@ -9,8 +9,6 @@ function summary(data) {
 
     const finalTime = formatDuration(time);
 
-    console.log(time);
-
     usedTime.textContent = finalTime;
 }
 
