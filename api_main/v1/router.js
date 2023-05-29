@@ -7,4 +7,5 @@ router.post("/stopsesh", loginRequired, controllers.stopsesh);
 router.post("/stream", cekSession, controllers.streamdata);
 router.get("/summaryTime", controllers.summaryTime);
 router.get("/active", controllers.activeSession);
+router.post("/restupdate", controllers.instanceUpdate);
 module.exports = router;

@@ -1,4 +1,5 @@
 const usedTime = document.getElementById("used-time");
+const restIns = document.getElementById("rest-instance");
 
 function summary(data) {
     console.log(data);
@@ -10,6 +11,7 @@ function summary(data) {
     const finalTime = formatDuration(time);
 
     usedTime.textContent = finalTime;
+    restIns.textContent = data.streamInstance;
 }
 
 generalDataLoader({ url: "/api/v1/session/summaryTime", func: summary });

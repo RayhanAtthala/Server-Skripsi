@@ -56,18 +56,19 @@ model Device {
 }
 
 model Session {
-  id            String    @id @default(cuid())
-  streamLDR     String?
-  streamDist    String?
-  streamPosture String?
-  streamRest    String?
-  active        Boolean
-  device        Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-  deviceId      String
-  History       History[]
-  stopTime      DateTime?
-  createdAt     DateTime? @default(now())
-  updatedAt     DateTime? @updatedAt
+  id             String    @id @default(cuid())
+  streamLDR      String?
+  streamDist     String?
+  streamPosture  String?
+  streamRest     String?
+  streamInstance String?   @default("1")
+  active         Boolean
+  device         Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  deviceId       String
+  History        History[]
+  stopTime       DateTime?
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt
 }
 
 model History {

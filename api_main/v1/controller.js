@@ -2,6 +2,8 @@ const { resError, resSuccess } = require("../../services/responseHandler");
 const { makeid } = require("../../services/generate");
 const { getUser } = require("../../services/auth");
 const prisma = require("../../prisma/client");
+const client = require("../../connections/mqtt/defineMqtt");
+const topic = "body/monitor/";
 
 exports.startsesh = async (req, res) => {
     try {
@@ -19,6 +21,8 @@ exports.startsesh = async (req, res) => {
                 },
             },
         });
+        client.publish(topic + "start/" + device.shortid, "true");
+        // console.log(device.shortid);
         return resSuccess({ res, title: "Starting Session", data: { status } });
     } catch (error) {
         console.log(error);
@@ -56,7 +60,7 @@ exports.stopsesh = async (req, res) => {
                 stopTime: new Date(),
             },
         });
-
+        client.publish(topic + "stop/" + device.shortid, "false");
         return resSuccess({
             res,
             data: { status },
@@ -227,6 +231,36 @@ exports.activeSession = async (req, res) => {
             title: "Success get session detail",
             data: session,
         });
+    } catch (error) {
+        return resError({ res, title: "Failed to get session", errors: error });
+    }
+};
+
+exports.instanceUpdate = async (req, res) => {
+    try {
+        const resCount = req.body.count;
+        const userId = await getUser(req);
+        const session = await prisma.session.findFirst({
+            where: {
+                device: {
+                    userId,
+                },
+                active: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        if (!session) throw "No active session found";
+        const instance = await prisma.session.update({
+            where: {
+                id: session.id,
+            },
+            data: {
+                streamInstance: resCount,
+            },
+        });
+        return resSuccess({ res, title: "Success Updating", data: instance });
     } catch (error) {
         return resError({ res, title: "Failed to get session", errors: error });
     }
